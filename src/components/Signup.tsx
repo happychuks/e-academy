@@ -1,17 +1,18 @@
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
 import { Eye, EyeOff, Mail } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { Separator } from "@/components/ui/separator"
 
-const LoadingSpinner = () => (
-  <div className="inline-block h-6 w-6 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]" role="status">
-    <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">Loading...</span>
-  </div>
-)
+import LoadingSpinner from './LoadingSpinner'
+import GoogleIcon from './GoogleIcon'
+import TwitterIcon from './TwitterIcon'
+
 
 export default function SignUp() {
   const [isLoading, setIsLoading] = useState(false)
@@ -99,7 +100,36 @@ export default function SignUp() {
             </Button>
           </form>
 
-          
+          <div className="mt-6">
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <Separator />
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="px-2 bg-white text-gray-500">Or</span>
+              </div>
+            </div>
+
+            <div className="mt-6 flex flex-col space-y-3">
+              <Button variant="outline" className="w-full flex items-center justify-center">
+                <GoogleIcon />
+                Continue with Google
+              </Button>
+              <Button variant="outline" className="w-full flex items-center justify-center">
+                <TwitterIcon />
+                Continue with Twitter
+              </Button>
+            </div>
+          </div>
+
+          <div className="mt-6 text-center">
+            <p className="text-sm text-gray-600">
+              Already here? {' '}
+              <Link href="/login" className="font-medium text-blue-600 hover:text-blue-500">
+                Login
+              </Link>
+            </p>
+          </div>          
         </div>
       </div>
     </div>

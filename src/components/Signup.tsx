@@ -140,13 +140,13 @@ export default function SignUp() {
 
             <div className="mt-6 flex flex-col space-y-3">
                 <Link href="#" passHref>
-                    <Button as="a" variant="outline" className="w-full flex items-center justify-center">
+                    <Button variant="outline" className="w-full flex items-center justify-center">
                         <GoogleIcon />
                         Continue with Google
                     </Button>
                 </Link>
                 <Link href="#" passHref>
-                    <Button as="a" variant="outline" className="w-full flex items-center justify-center">
+                    <Button variant="outline" className="w-full flex items-center justify-center">
                         <TwitterIcon />
                         Continue with Twitter
                     </Button>

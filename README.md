@@ -83,6 +83,8 @@ pnpm start
 bun start
 ```
 
+**View live project here:** `https://e-academy-one.vercel.app/`
+
 ## Features
 
 - User Authentication (Sign Up, Login)

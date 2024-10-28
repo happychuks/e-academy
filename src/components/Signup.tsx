@@ -81,7 +81,7 @@ export default function SignUp() {
             <div>
               <Label htmlFor="email">Email address</Label>
               <div className="mt-1 relative">
-                <Input id="email" name="email" type="email" autoComplete="email" required />
+                <Input id="email" name="email" type="email" autoComplete="email" placeholder="Enter Email" required />
                 <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
                   <Mail className="h-5 w-5 text-gray-400" />
                 </div>
@@ -92,7 +92,7 @@ export default function SignUp() {
             <div>
               <Label htmlFor="password">Password</Label>
               <div className="mt-1 relative">
-                <Input id="password" name="password" type={showPassword ? "text" : "password"} autoComplete="new-password" required />
+                <Input id="password" name="password" placeholder="Enter Password" type={showPassword ? "text" : "password"} autoComplete="new-password" required />
                 <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
                   <button type="button" onClick={() => setShowPassword(!showPassword)} className="focus:outline-none">
                     {showPassword ? <EyeOff className="h-5 w-5 text-gray-400" /> : <Eye className="h-5 w-5 text-gray-400" />}
@@ -105,7 +105,7 @@ export default function SignUp() {
             <div className="mb-4">
               <Label htmlFor="confirmPassword">Confirm Password</Label>
               <div className="mt-1 relative">
-                <Input id="confirmPassword" name="confirmPassword" type={showConfirmPassword ? "text" : "password"} autoComplete="new-password" required />
+                <Input id="confirmPassword" name="confirmPassword" placeholder="Enter Password" type={showConfirmPassword ? "text" : "password"} autoComplete="new-password" required />
                 <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
                   <button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)} className="focus:outline-none">
                     {showConfirmPassword ? <EyeOff className="h-5 w-5 text-gray-400" /> : <Eye className="h-5 w-5 text-gray-400" />}

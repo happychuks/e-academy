@@ -25,8 +25,10 @@ Make sure you have the following installed on your machine:
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/happychuks/e-academy-frontend.git
-   cd e-academy-frontend
+   git clone https://github.com/happychuks/e-academy.git
+   cd e-academy
+   ```
+
 
 
 2. Install dependencies:

@@ -59,6 +59,7 @@ export default function SignUp() {
       // Simulating API call to create account
       await new Promise(resolve => setTimeout(resolve, 2000));
       setAlert({ type: 'success', message: 'Account created successfully!' });
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       setAlert({ type: 'error', message: 'Failed to create account. Please try again.' });
     } finally {

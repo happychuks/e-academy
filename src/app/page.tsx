@@ -40,11 +40,11 @@ export default function Home() {
         <h2 className="text-3xl font-bold text-center mb-8 text-green-700">Testimonials</h2>
         <div className="space-y-8">
           <div className="bg-gray-100 p-6 rounded-lg shadow-md">
-            <p className="text-gray-700 mb-4">"E-Academy has transformed the way I learn. The courses are engaging and the instructors are top-notch!"</p>
+            <p className="text-gray-700 mb-4"> E-Academy has transformed the way I learn. The courses are engaging and the instructors are top-notch!</p>
             <p className="text-gray-900 font-bold">- Jane Doe</p>
           </div>
           <div className="bg-gray-100 p-6 rounded-lg shadow-md">
-            <p className="text-gray-700 mb-4">"I love the flexibility of being able to learn at my own pace. E-Academy fits perfectly into my busy schedule."</p>
+            <p className="text-gray-700 mb-4">I love the flexibility of being able to learn at my own pace. E-Academy fits perfectly into my busy schedule.</p>
             <p className="text-gray-900 font-bold">- John Smith</p>
           </div>
         </div>

@@ -12,6 +12,7 @@ const config: Config = {
   		colors: {
 			'custom-blue': '#0D5EBA',
         	'custom-blue-hover': '#0A4A94',
+			'custom-red': '#CC400C',
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
   			card: {

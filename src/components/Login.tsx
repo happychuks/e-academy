@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { Eye, EyeOff, Mail } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -15,6 +16,7 @@ import GoogleIcon from './GoogleIcon';
 import TwitterIcon from './TwitterIcon';
 
 
+
 // Zod schema for form validation
 const loginSchema = z.object({
   email: z.string().email('Invalid email address'),
@@ -25,6 +27,7 @@ export default function Login() {
   const [isLoading, setIsLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
   const [alert, setAlert] = useState<{ type: 'success' | 'error', message: string } | null>(null)
+  const router = useRouter()
   const [formErrors, setFormErrors] = useState<{
     email?: string[];
     password?: string[];
@@ -33,6 +36,7 @@ export default function Login() {
   const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     setFormErrors(null)
+    setIsLoading(true)
     setAlert(null)
 
     const formData = new FormData(event.currentTarget)
@@ -49,10 +53,33 @@ export default function Login() {
     }
 
     setIsLoading(true)
-    // Simulating API call to login
-    await new Promise(resolve => setTimeout(resolve, 2000))
-    setAlert({ type: 'success', message: 'Logged in successfully!' })
-    setIsLoading(false)
+
+    // Send login request to backend API
+    try {
+      const response = await fetch('http://127.0.0.1:8000/api/login/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      })
+
+      if (!response.ok) {
+        throw new Error('Invalid credentials')
+      }
+
+      // Set access and refresh tokens in local storage
+      const data = await response.json()
+      localStorage.setItem('accessToken', data.access)
+      localStorage.setItem('refreshToken', data.refresh)
+
+      setAlert({ type: 'success', message: 'Congrats! You have Logged in successfully!' })
+      setTimeout(() => router.push('/dashboard'), 1000)
+    } catch (error) {
+      setAlert({ type: 'error', message: error instanceof Error ? error.message : 'An unexpected error occurred' })
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (

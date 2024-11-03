@@ -12,6 +12,7 @@ import { z } from 'zod';
 import LoadingSpinner from './LoadingSpinner';
 import GoogleIcon from './GoogleIcon';
 import TwitterIcon from './TwitterIcon';
+import { useRouter } from 'next/navigation';
 
 // Zod schema for form validation
 const signUpSchema = z.object({
@@ -29,43 +30,40 @@ export default function SignUp() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [alert, setAlert] = useState<{ type: 'success' | 'error', message: string } | null>(null);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const router = useRouter();
 
   const handleSignUp = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setIsLoading(true);
     setErrors({});
 
-    const formData = new FormData(event.currentTarget);
-    const data = {
-      email: formData.get('email') as string,
-      password: formData.get('password') as string,
-      confirmPassword: formData.get('confirmPassword') as string
-    };
-
-    const result = signUpSchema.safeParse(data);
-    if (!result.success) {
-      const fieldErrors: { [key: string]: string } = {};
-      result.error.errors.forEach(error => {
-        if (error.path.length > 0) {
-          fieldErrors[error.path[0]] = error.message;
-        }
-      });
-      setErrors(fieldErrors);
-      setIsLoading(false);
-      return;
-    }
+    const formData = new FormData(event.currentTarget)
+    const email = formData.get('email') as string
+    const password = formData.get('password') as string
+    const password2 = formData.get('confirmPassword') as string
 
     try {
-      // Simulating API call to create account
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      setAlert({ type: 'success', message: 'Account created successfully!' });
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const response = await fetch('http://127.0.0.1:8000/api/signup/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password, password2 }),
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.password?.[0] || 'Signup failed. Please try again.')
+      }
+
+      setAlert({ type: 'success', message: 'Account created successfully!' })
+      setTimeout(() => router.push('/login'), 2000)
     } catch (error) {
-      setAlert({ type: 'error', message: 'Failed to create account. Please try again.' });
+      setAlert({ type: 'error', message: error instanceof Error ? error.message : 'An unexpected error occurred' })
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col justify-center py-12 sm:px-6 lg:px-8">

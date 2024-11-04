@@ -8,21 +8,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Separator } from "@/components/ui/separator";
-import { z } from 'zod';
 import LoadingSpinner from './LoadingSpinner';
 import GoogleIcon from './GoogleIcon';
 import TwitterIcon from './TwitterIcon';
 import { useRouter } from 'next/navigation';
-
-// Zod schema for form validation
-const signUpSchema = z.object({
-  email: z.string().email({ message: "Invalid email address" }),
-  password: z.string().min(8, { message: "Password must be at least 8 characters long" }),
-  confirmPassword: z.string().min(8, { message: "Confirm password must be at least 8 characters long" })
-}).refine(data => data.password === data.confirmPassword, {
-  message: "Passwords don't match",
-  path: ["confirmPassword"]
-});
 
 export default function SignUp() {
   const [isLoading, setIsLoading] = useState(false);
@@ -52,8 +41,8 @@ export default function SignUp() {
       })
 
       if (!response.ok) {
-        const errorData = await response.json()
-        throw new Error(errorData.password?.[0] || 'Signup failed. Please try again.')
+        const errorData = await response.json();
+        throw new Error(errorData.email || errorData.password || 'Signup failed. Please try again.');
       }
 
       setAlert({ type: 'success', message: 'Account created successfully!' })

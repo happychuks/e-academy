@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { Eye, EyeOff, Mail } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -15,6 +16,7 @@ import GoogleIcon from './GoogleIcon';
 import TwitterIcon from './TwitterIcon';
 
 
+
 // Zod schema for form validation
 const loginSchema = z.object({
   email: z.string().email('Invalid email address'),
@@ -25,6 +27,7 @@ export default function Login() {
   const [isLoading, setIsLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
   const [alert, setAlert] = useState<{ type: 'success' | 'error', message: string } | null>(null)
+  const router = useRouter()
   const [formErrors, setFormErrors] = useState<{
     email?: string[];
     password?: string[];
@@ -33,11 +36,13 @@ export default function Login() {
   const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     setFormErrors(null)
+    setIsLoading(true)
     setAlert(null)
 
     const formData = new FormData(event.currentTarget)
     const email = formData.get('email') as string
     const password = formData.get('password') as string
+    const rememberMe = formData.get('remember-me') === 'on'
 
     try {
       loginSchema.parse({ email, password })
@@ -49,12 +54,39 @@ export default function Login() {
     }
 
     setIsLoading(true)
-    // Simulating API call to login
-    await new Promise(resolve => setTimeout(resolve, 2000))
-    setAlert({ type: 'success', message: 'Logged in successfully!' })
-    setIsLoading(false)
-  }
 
+    // Send login request to backend API
+    try {
+      const response = await fetch('/api/login/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password, rememberMe }),
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        localStorage.setItem('accessToken', data.access)
+        if (rememberMe) {
+          localStorage.setItem('refreshToken', data.refresh)
+        } else {
+          sessionStorage.setItem('refreshToken', data.refresh)
+        }
+        setAlert({ type: 'success', message: 'Logged in successfully!' })
+        router.push('/dashboard')
+      } else {
+        const errorData = await response.json()
+        setAlert({ type: 'error', message: errorData.message || 'Invalid credentials' })
+      }
+    } catch (error) {
+      console.error('Login error:', error)
+      setAlert({ type: 'error', message: 'An unexpected error occurred. Please try again.' })
+    } finally {
+      setIsLoading(false)
+    }
+  }
+  
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
@@ -114,7 +146,7 @@ export default function Login() {
                 </Label>
               </div>
               <div className="text-sm">
-                <Link href="#" className="font-medium text-custom-red hover:text-red-500">
+                <Link href="/forgot-password" className="font-medium text-custom-red hover:text-red-500">
                   Forgot Password?
                 </Link>
               </div>

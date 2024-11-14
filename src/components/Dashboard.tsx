@@ -12,12 +12,12 @@ export default function Dashboard() {
     const fetchUserData = async () => {
       const token = localStorage.getItem('accessToken')
       if (!token) {
-        router.push('http://127.0.0.1:8000/api/login/')
+        router.push('/api/login/')
         return
       }
 
       try {
-        const response = await fetch('http://127.0.0.1:8000/api/user/', {
+        const response = await fetch('/api/user/', {
           headers: {
             'Authorization': `Bearer ${token}`
           }
@@ -31,7 +31,7 @@ export default function Dashboard() {
         setUser(userData)
       } catch (error) {
         console.error('Error fetching user data:', error)
-        router.push('http://127.0.0.1:8000/api/login/')
+        router.push('/api/login/')
       }
     }
 
@@ -41,7 +41,7 @@ export default function Dashboard() {
   const handleLogout = () => {
     localStorage.removeItem('accessToken')
     localStorage.removeItem('refreshToken')
-    router.push('login/')
+    router.push('/login')
   }
 
   if (!user) {

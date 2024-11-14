@@ -42,6 +42,7 @@ export default function Login() {
     const formData = new FormData(event.currentTarget)
     const email = formData.get('email') as string
     const password = formData.get('password') as string
+    const rememberMe = formData.get('remember-me') === 'on'
 
     try {
       loginSchema.parse({ email, password })
@@ -56,32 +57,36 @@ export default function Login() {
 
     // Send login request to backend API
     try {
-      const response = await fetch('http://127.0.0.1:8000/api/login/', {
+      const response = await fetch('/api/login/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email, password, rememberMe }),
       })
 
-      if (!response.ok) {
-        throw new Error('Invalid credentials')
+      if (response.ok) {
+        const data = await response.json()
+        localStorage.setItem('accessToken', data.access)
+        if (rememberMe) {
+          localStorage.setItem('refreshToken', data.refresh)
+        } else {
+          sessionStorage.setItem('refreshToken', data.refresh)
+        }
+        setAlert({ type: 'success', message: 'Logged in successfully!' })
+        router.push('/dashboard')
+      } else {
+        const errorData = await response.json()
+        setAlert({ type: 'error', message: errorData.message || 'Invalid credentials' })
       }
-
-      // Set access and refresh tokens in local storage
-      const data = await response.json()
-      localStorage.setItem('accessToken', data.access)
-      localStorage.setItem('refreshToken', data.refresh)
-
-      setAlert({ type: 'success', message: 'Congrats! You have Logged in successfully!' })
-      setTimeout(() => router.push('/dashboard'), 1000)
     } catch (error) {
-      setAlert({ type: 'error', message: error instanceof Error ? error.message : 'An unexpected error occurred' })
+      console.error('Login error:', error)
+      setAlert({ type: 'error', message: 'An unexpected error occurred. Please try again.' })
     } finally {
       setIsLoading(false)
     }
   }
-
+  
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
@@ -141,7 +146,7 @@ export default function Login() {
                 </Label>
               </div>
               <div className="text-sm">
-                <Link href="#" className="font-medium text-custom-red hover:text-red-500">
+                <Link href="/forgot-password" className="font-medium text-custom-red hover:text-red-500">
                   Forgot Password?
                 </Link>
               </div>

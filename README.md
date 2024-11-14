@@ -43,8 +43,17 @@ pnpm install
 bun install
 ```
 
+**Environment Variable**
+Create a `.env` file in the root directory and add the following environment variables:
+    
+    BACKEND_URL=http://127.0.0.1:8000
+
+    # Frontend URL 
+    NEXT_PUBLIC_FRONTEND_URL=http://localhost:3000
+    
+
 **Running the Development Server**
-First, run the development server:
+First, run the frontend development server: (Ensure the backend server is running alongside)
 ```bash
 npm run dev
 # or
